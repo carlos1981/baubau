@@ -5,7 +5,7 @@ import Clients from './pages/Clients';
 
 function App() {
   return (
-    <Router basename="/baubau">
+    <Router basename="/">
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Dashboard />} />
