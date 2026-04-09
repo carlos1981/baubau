@@ -29,11 +29,13 @@ const Sidebar = () => {
           Clientes
         </NavLink>
         
-        {/* Placeholder links with no real functionality yet */}
-        <div className="nav-link" style={{ opacity: 0.5, cursor: 'not-allowed' }}>
-          <Folders size={20} />
-          Proyectos
-        </div>
+        <NavLink 
+          to="/companies" 
+          className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+        >
+          <Building2 size={20} />
+          Empresas
+        </NavLink>
         
         <div className="nav-link" style={{ opacity: 0.5, cursor: 'not-allowed', marginTop: 'auto' }}>
           <Settings size={20} />
