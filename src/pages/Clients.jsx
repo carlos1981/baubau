@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { UserPlus, MoreVertical, Mail, Phone, Building2, Search } from 'lucide-react';
+import Modal from '../components/Modal';
+import ClientForm from '../components/ClientForm';
 
 const Clients = () => {
   const [clientes, setClientes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetchClientes();
@@ -14,7 +17,6 @@ const Clients = () => {
   const fetchClientes = async () => {
     try {
       setLoading(true);
-      // Hacemos un join con la tabla empresas para obtener el nombre de la empresa
       const { data, error } = await supabase
         .from('clientes')
         .select(`
@@ -34,6 +36,11 @@ const Clients = () => {
     }
   };
 
+  const handleCreateSuccess = () => {
+    setIsModalOpen(false);
+    fetchClientes();
+  };
+
   const filteredClientes = clientes.filter(cliente => 
     `${cliente.nombre} ${cliente.apellido_1}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
     cliente.email?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -48,12 +55,12 @@ const Clients = () => {
             <Search size={16} color="var(--text-muted)" />
             <input 
               type="text" 
-              placeholder="Buscar..." 
+              placeholder="Buscar por nombre o email..." 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <button className="btn btn-primary">
+          <button className="btn btn-primary" onClick={() => setIsModalOpen(true)}>
             <UserPlus size={18} />
             Añadir Cliente
           </button>
@@ -127,6 +134,17 @@ const Clients = () => {
           </table>
         )}
       </div>
+
+      <Modal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        title="Añadir Nuevo Cliente"
+      >
+        <ClientForm 
+          onSuccess={handleCreateSuccess} 
+          onCancel={() => setIsModalOpen(false)} 
+        />
+      </Modal>
     </div>
   );
 };
